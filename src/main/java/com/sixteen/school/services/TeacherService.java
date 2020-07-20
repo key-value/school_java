@@ -1,21 +1,37 @@
 package com.sixteen.school.services;
 
+import com.sixteen.school.mapper.TeacherMappper;
 import com.sixteen.school.model.Teacher;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
 public class TeacherService {
-    long addTeacher(long Id) {
-        return 1;
+
+    @Autowired
+    public TeacherMappper teacherMappper;
+
+    public long addTeacher(Teacher teacher) {
+        return teacherMappper.insert(teacher);
     }
 
-    Teacher updateTeacher() {
-        return new Teacher();
+    public int updateTeacher(Teacher teacher) {
+        return teacherMappper.updateByPrimaryKeySelective(teacher);
     }
 
-    long removeTeacher(long id) {
-        return 1;
+    public int removeTeacher(long id) {
+        Teacher teacher = new Teacher();
+        teacher.setId(id);
+        return teacherMappper.deleteByExample(teacher);
     }
 
-    Teacher getTeacherById(long id) {
-        return new Teacher();
+    public Teacher getTeacherById(long  id) {
+        return teacherMappper.selectByPrimaryKey(id);
+    }
+
+    public List<Teacher> getList(){
+        return teacherMappper.selectAll();
     }
 }
