@@ -27,7 +27,7 @@ public class TeacherService {
         return teacherMappper.deleteByExample(teacher);
     }
 
-    public Teacher getTeacherById(long  id) {
+    public Teacher getTeacherById(Long  id) {
         return teacherMappper.selectByPrimaryKey(id);
     }
 

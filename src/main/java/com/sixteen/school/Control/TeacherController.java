@@ -4,14 +4,12 @@ import com.sixteen.school.model.Teacher;
 import com.sixteen.school.services.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "v1", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "v1/teacher", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class TeacherController {
 
     @Autowired
@@ -22,18 +20,23 @@ public class TeacherController {
         return teacherService.addTeacher(teacher);
     }
 
+    @PutMapping()
     int updateTeacher(Teacher teacher) {
         return teacherService.updateTeacher(teacher);
     }
 
+    @DeleteMapping()
     int removeTeacher(long id) {
         return teacherService.removeTeacher(id);
     }
 
-    Teacher getTeacherById(long  id) {
-        return teacherService.getTeacherById(id);
+    @GetMapping(path = "/{id}")
+    Teacher getTeacherById(@PathVariable(value="id") Long  id) {
+        Teacher teacher =  teacherService.getTeacherById(id);
+        return teacher;
     }
 
+    @GetMapping()
     List<Teacher> getList(){
         return teacherService.getList();
     }
