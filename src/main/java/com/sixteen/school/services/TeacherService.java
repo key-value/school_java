@@ -1,5 +1,7 @@
 package com.sixteen.school.services;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.sixteen.school.mapper.TeacherMappper;
 import com.sixteen.school.model.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +35,13 @@ public class TeacherService {
 
     public List<Teacher> getList(){
         return teacherMappper.selectAll();
+    }
+    public PageInfo<Teacher> getPageList(int pageSize,int pageIndex){
+        PageHelper.startPage(pageIndex, pageSize);
+        List<Teacher> teacherList= teacherMappper.selectAll();
+        PageInfo info=new PageInfo(teacherList);
+        System.out.println(info.getTotal());//总条数
+        System.out.println(info.getList());//显示的数据
+        return info ;
     }
 }

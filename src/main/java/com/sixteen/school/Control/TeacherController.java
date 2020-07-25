@@ -1,10 +1,17 @@
 package com.sixteen.school.Control;
 
+import com.github.pagehelper.PageInfo;
 import com.sixteen.school.model.Teacher;
 import com.sixteen.school.services.TeacherService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -16,7 +23,9 @@ public class TeacherController {
     public TeacherService teacherService;
 
     @PostMapping()
-    long addTeacher(Teacher teacher) {
+    long addTeacher(String name) {
+        Teacher teacher = new Teacher();
+        teacher.setTeacherName(name);
         return teacherService.addTeacher(teacher);
     }
 
@@ -31,13 +40,23 @@ public class TeacherController {
     }
 
     @GetMapping(path = "/{id}")
-    Teacher getTeacherById(@PathVariable(value="id") Long  id) {
-        Teacher teacher =  teacherService.getTeacherById(id);
+    Teacher getTeacherById(@PathVariable(value = "id") Long id) {
+        Teacher teacher = teacherService.getTeacherById(id);
         return teacher;
     }
 
     @GetMapping()
-    List<Teacher> getList(){
+    List<Teacher> getList() {
         return teacherService.getList();
+    }
+
+    @GetMapping(path = "/page")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", paramType = "query", value = "1"),
+            @ApiImplicitParam(name = "size", paramType = "query", value = "10")
+    })
+    PageInfo<Teacher> getPageList(@ApiIgnore @PageableDefault(value = 15, sort = {"id"}, direction = Sort.Direction.DESC)
+                                          Pageable pageable) {
+        return teacherService.getPageList(pageable.getPageSize(), pageable.getPageNumber());
     }
 }
