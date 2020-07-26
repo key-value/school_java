@@ -1,4 +1,4 @@
-package com.sixteen.school.Control;
+package com.sixteen.school.control;
 
 import com.github.pagehelper.PageInfo;
 import com.sixteen.school.model.Teacher;

@@ -40,8 +40,6 @@ public class TeacherService {
         PageHelper.startPage(pageIndex, pageSize);
         List<Teacher> teacherList= teacherMappper.selectAll();
         PageInfo info=new PageInfo(teacherList);
-        System.out.println(info.getTotal());//总条数
-        System.out.println(info.getList());//显示的数据
         return info ;
     }
 }

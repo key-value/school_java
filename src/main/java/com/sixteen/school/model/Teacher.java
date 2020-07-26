@@ -18,7 +18,8 @@ public class Teacher {
     private Long id;
 
     @Column(name="TeacherName")
-    private String teacherName;   /**
+    private String teacherName;
+    /**
      * 创建时间
      */
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
