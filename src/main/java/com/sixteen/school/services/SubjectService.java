@@ -15,21 +15,21 @@ public class SubjectService {
     @Autowired
     public SubjectMapper subjectMapper;
 
-    public long addGlass(Subject schedule) {
-        return subjectMapper.insert(schedule);
+    public long addSubject(Subject subject) {
+        return subjectMapper.insert(subject);
     }
 
-    public int updateGlass(Subject schedule) {
-        return subjectMapper.updateByPrimaryKeySelective(schedule);
+    public int updateSubject(Subject subject) {
+        return subjectMapper.updateByPrimaryKeySelective(subject);
     }
 
-    public int removeGlass(long id) {
-        Schedule schedule = new Schedule();
-        schedule.setId(id);
-        return subjectMapper.deleteByExample(schedule);
+    public int removeSubject(long id) {
+        Schedule subject = new Schedule();
+        subject.setId(id);
+        return subjectMapper.deleteByExample(subject);
     }
 
-    public Subject getGlassById(Long  id) {
+    public Subject getSubjectById(Long  id) {
         return subjectMapper.selectByPrimaryKey(id);
     }
 
@@ -38,8 +38,8 @@ public class SubjectService {
     }
     public PageInfo<Subject> getPageList(int pageSize, int pageIndex){
         PageHelper.startPage(pageIndex, pageSize);
-        List<Subject> glassList= subjectMapper.selectAll();
-        PageInfo info=new PageInfo(glassList);
+        List<Subject> subjectList= subjectMapper.selectAll();
+        PageInfo info=new PageInfo(subjectList);
         return info ;
     }
 }

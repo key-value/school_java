@@ -14,21 +14,21 @@ public class ScheduleService {
     @Autowired
     public ScheduleMapper scheduleMapper;
 
-    public long addGlass(Schedule schedule) {
+    public long addSchedule(Schedule schedule) {
         return scheduleMapper.insert(schedule);
     }
 
-    public int updateGlass(Schedule schedule) {
+    public int updateSchedule(Schedule schedule) {
         return scheduleMapper.updateByPrimaryKeySelective(schedule);
     }
 
-    public int removeGlass(long id) {
+    public int removeSchedule(long id) {
         Schedule schedule = new Schedule();
         schedule.setId(id);
         return scheduleMapper.deleteByExample(schedule);
     }
 
-    public Schedule getGlassById(Long  id) {
+    public Schedule getScheduleById(Long  id) {
         return scheduleMapper.selectByPrimaryKey(id);
     }
 
@@ -37,8 +37,8 @@ public class ScheduleService {
     }
     public PageInfo<Schedule> getPageList(int pageSize, int pageIndex){
         PageHelper.startPage(pageIndex, pageSize);
-        List<Schedule> glassList= scheduleMapper.selectAll();
-        PageInfo info=new PageInfo(glassList);
+        List<Schedule> scheduleList= scheduleMapper.selectAll();
+        PageInfo info=new PageInfo(scheduleList);
         return info ;
     }
 }
