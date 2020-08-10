@@ -5,12 +5,18 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
-@Table(name = "glass")
+//@Table(name = "glass")
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+
 public class Glass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +29,7 @@ public class Glass {
     /**
      * 创建时间
      */
+    @CreatedDate
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @Column(name = "CreationTime", updatable = false)
@@ -31,6 +38,8 @@ public class Glass {
     /**
      * 变更时间
      */
+
+    @LastModifiedDate
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @Column(name = "LastModificationTime")

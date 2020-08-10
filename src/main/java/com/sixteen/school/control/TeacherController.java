@@ -1,11 +1,11 @@
 package com.sixteen.school.control;
 
-import com.github.pagehelper.PageInfo;
 import com.sixteen.school.model.Teacher;
 import com.sixteen.school.services.TeacherService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,26 +24,31 @@ public class TeacherController {
     public TeacherService teacherService;
 
     @PostMapping()
-    long addTeacher(String name) {
+    Teacher addTeacher(String name) {
         Teacher teacher = new Teacher();
         teacher.setTeacherName(name);
         return teacherService.addTeacher(teacher);
     }
 
-    @PutMapping()
-    int updateTeacher(Teacher teacher) {
+    @PutMapping(path = "/{id}")
+    Teacher updateTeacher(@PathVariable(value = "id") Teacher teacher,String name) {
+        teacher.setTeacherName(name);
         return teacherService.updateTeacher(teacher);
     }
 
-    @DeleteMapping()
-    int removeTeacher(long id) {
-        return teacherService.removeTeacher(id);
+    @DeleteMapping(path = "/{id}")
+    void removeTeacher(@PathVariable(value = "id")  long id) {
+         teacherService.removeTeacher(id);
     }
 
     @GetMapping(path = "/{id}")
-    Teacher getTeacherById(@PathVariable(value = "id") Long id) {
-        Teacher teacher = teacherService.getTeacherById(id);
+    Teacher getTeacherById(@PathVariable(value = "id") Teacher teacher) {
         return teacher;
+    }
+
+    @GetMapping(path = "/Id")
+    List<Teacher> getListById(@RequestParam(value = "ids") List<Teacher> teacher ) {
+        return new ArrayList<>();
     }
 
     @GetMapping()
@@ -50,13 +56,15 @@ public class TeacherController {
         return teacherService.getList();
     }
 
+
     @GetMapping(path = "/page")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", paramType = "query", value = "1"),
             @ApiImplicitParam(name = "size", paramType = "query", value = "10")
     })
-    PageInfo<Teacher> getPageList(@ApiIgnore @PageableDefault(value = 15, sort = {"id"}, direction = Sort.Direction.DESC)
+    Page<Teacher> getPageList(@ApiIgnore @PageableDefault(value = 15, sort = {"id"}, direction = Sort.Direction.DESC)
                                           Pageable pageable) {
-        return teacherService.getPageList(pageable.getPageSize(), pageable.getPageNumber());
+        Page<Teacher> teacherPage = teacherService.getPageList( pageable);
+        return teacherPage;
     }
 }

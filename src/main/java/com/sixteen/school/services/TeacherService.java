@@ -1,10 +1,10 @@
 package com.sixteen.school.services;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.sixteen.school.mapper.TeacherMappper;
 import com.sixteen.school.model.Teacher;
+import com.sixteen.school.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,33 +13,29 @@ import java.util.List;
 public class TeacherService {
 
     @Autowired
-    public TeacherMappper teacherMappper;
+    private TeacherRepository teacherRepository;
 
-    public long addTeacher(Teacher teacher) {
-        return teacherMappper.insert(teacher);
+    public Teacher addTeacher(Teacher teacher) {
+        return teacherRepository.save(teacher);
     }
 
-    public int updateTeacher(Teacher teacher) {
-        return teacherMappper.updateByPrimaryKeySelective(teacher);
+    public Teacher updateTeacher(Teacher teacher) {
+        return teacherRepository.save(teacher);
     }
 
-    public int removeTeacher(long id) {
-        Teacher teacher = new Teacher();
-        teacher.setId(id);
-        return teacherMappper.deleteByExample(teacher);
+    public void removeTeacher(long id) {
+        teacherRepository.deleteById(id);
     }
 
     public Teacher getTeacherById(Long  id) {
-        return teacherMappper.selectByPrimaryKey(id);
+        return teacherRepository.findById(  id).get();
     }
 
     public List<Teacher> getList(){
-        return teacherMappper.selectAll();
+        return teacherRepository.findAll();
     }
-    public PageInfo<Teacher> getPageList(int pageSize,int pageIndex){
-        PageHelper.startPage(pageIndex, pageSize);
-        List<Teacher> teacherList= teacherMappper.selectAll();
-        PageInfo info=new PageInfo(teacherList);
-        return info ;
+    public Page<Teacher> getPageList(Pageable pageable){
+        Page<Teacher> teacherList= teacherRepository.findAll(pageable);
+        return teacherList ;
     }
 }

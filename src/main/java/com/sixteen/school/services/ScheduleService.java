@@ -1,10 +1,10 @@
 package com.sixteen.school.services;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.sixteen.school.mapper.ScheduleMapper;
 import com.sixteen.school.model.Schedule;
+import com.sixteen.school.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,33 +12,29 @@ import java.util.List;
 @Service
 public class ScheduleService {
     @Autowired
-    public ScheduleMapper scheduleMapper;
+    private ScheduleRepository scheduleRepository;
 
-    public long addSchedule(Schedule schedule) {
-        return scheduleMapper.insert(schedule);
+    public Schedule addSchedule(Schedule schedule) {
+        return scheduleRepository.save(schedule);
     }
 
-    public int updateSchedule(Schedule schedule) {
-        return scheduleMapper.updateByPrimaryKeySelective(schedule);
+    public Schedule updateSchedule(Schedule schedule) {
+        return scheduleRepository.save(schedule);
     }
 
-    public int removeSchedule(long id) {
-        Schedule schedule = new Schedule();
-        schedule.setId(id);
-        return scheduleMapper.deleteByExample(schedule);
+    public void removeSchedule(long id) {
+         scheduleRepository.deleteById(id);
     }
 
     public Schedule getScheduleById(Long  id) {
-        return scheduleMapper.selectByPrimaryKey(id);
+        return scheduleRepository.findById(id).get();
     }
 
     public List<Schedule> getList(){
-        return scheduleMapper.selectAll();
+        return scheduleRepository.findAll();
     }
-    public PageInfo<Schedule> getPageList(int pageSize, int pageIndex){
-        PageHelper.startPage(pageIndex, pageSize);
-        List<Schedule> scheduleList= scheduleMapper.selectAll();
-        PageInfo info=new PageInfo(scheduleList);
-        return info ;
+    public Page<Schedule> getPageList( Pageable pageable){
+        Page<Schedule> scheduleList= scheduleRepository.findAll(pageable);
+        return scheduleList ;
     }
 }

@@ -1,10 +1,10 @@
 package com.sixteen.school.services;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.sixteen.school.mapper.GlassMapper;
 import com.sixteen.school.model.Glass;
+import com.sixteen.school.repository.GlassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,33 +12,29 @@ import java.util.List;
 @Service
 public class GlassService {
     @Autowired
-    public GlassMapper glassMapper;
+    private GlassRepository glassRepository;
 
-    public long addGlass(Glass glass) {
-        return glassMapper.insert(glass);
+    public Glass addGlass(Glass glass) {
+        return glassRepository.save(glass);
     }
 
-    public int updateGlass(Glass glass) {
-        return glassMapper.updateByPrimaryKeySelective(glass);
+    public Glass updateGlass(Glass glass) {
+        return glassRepository.save(glass);
     }
 
-    public int removeGlass(long id) {
-        Glass glass = new Glass();
-        glass.setId(id);
-        return glassMapper.deleteByExample(glass);
+    public void removeGlass(long id) {
+        glassRepository.deleteById(id);
     }
 
     public Glass getGlassById(Long  id) {
-        return glassMapper.selectByPrimaryKey(id);
+        return glassRepository.findById(id).get();
     }
 
     public List<Glass> getList(){
-        return glassMapper.selectAll();
+        return glassRepository.findAll();
     }
-    public PageInfo<Glass> getPageList(int pageSize, int pageIndex){
-        PageHelper.startPage(pageIndex, pageSize);
-        List<Glass> glassList= glassMapper.selectAll();
-        PageInfo info=new PageInfo(glassList);
-        return info ;
+    public Page<Glass> getPageList(   Pageable pageable){
+        Page<Glass> glassList= glassRepository.findAll(pageable);
+        return glassList ;
     }
 }

@@ -1,11 +1,10 @@
 package com.sixteen.school.services;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.sixteen.school.mapper.SubjectMapper;
-import com.sixteen.school.model.Schedule;
 import com.sixteen.school.model.Subject;
+import com.sixteen.school.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,33 +12,30 @@ import java.util.List;
 @Service
 public class SubjectService {
     @Autowired
-    public SubjectMapper subjectMapper;
+    private SubjectRepository subjectRepository;
 
-    public long addSubject(Subject subject) {
-        return subjectMapper.insert(subject);
+    public Subject addSubject(Subject subject) {
+        return subjectRepository.save(subject);
     }
 
-    public int updateSubject(Subject subject) {
-        return subjectMapper.updateByPrimaryKeySelective(subject);
+    public Subject updateSubject(Subject subject) {
+        return subjectRepository.save(subject);
     }
 
-    public int removeSubject(long id) {
-        Schedule subject = new Schedule();
-        subject.setId(id);
-        return subjectMapper.deleteByExample(subject);
+    public void removeSubject(long id) {
+         subjectRepository.deleteById(id);
     }
 
     public Subject getSubjectById(Long  id) {
-        return subjectMapper.selectByPrimaryKey(id);
+        return subjectRepository.findById(id).get();
     }
 
     public List<Subject> getList(){
-        return subjectMapper.selectAll();
+        return subjectRepository.findAll();
     }
-    public PageInfo<Subject> getPageList(int pageSize, int pageIndex){
-        PageHelper.startPage(pageIndex, pageSize);
-        List<Subject> subjectList= subjectMapper.selectAll();
-        PageInfo info=new PageInfo(subjectList);
-        return info ;
+
+    public Page<Subject> getPageList(Pageable pageable){
+        Page<Subject> subjectList= subjectRepository.findAll(pageable);
+        return subjectList ;
     }
 }
