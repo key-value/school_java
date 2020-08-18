@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Data;
+import org.hibernate.annotations.TypeDef;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @Table(name ="schedule")
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@TypeDef(name = "json", typeClass = JsonStringType.class)
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +35,10 @@ public class Schedule {
 
     @Column(name = "Count")
     private Integer count;
+
+//    @Type(type = "json")
+//    @Column(name = "Rules")
+//    private List<Integer> rules;
     /**
      * 创建时间
      */

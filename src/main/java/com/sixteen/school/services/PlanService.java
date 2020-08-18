@@ -1,6 +1,9 @@
 package com.sixteen.school.services;
+import com.google.common.collect.Lists;
 
+import com.sixteen.school.dto.Plan;
 import com.sixteen.school.model.Schedule;
+import com.sixteen.school.model.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,8 @@ public class PlanService {
 
     @Autowired
     public ScheduleService scheduleService;
+@Autowired
+    public SubjectService subjectService;
 
     private Long[][] table;
 
@@ -20,27 +25,27 @@ public class PlanService {
     private int daySize = 7;
 
 
-    public Map<Long, List<Schedule>> play() {
+    public Map<Long, List<Plan>> play() {
         table = new Long[dayNum][daySize + 1];
-        List<Schedule> scheduleList = scheduleService.getList();
-        List<Long> glassList = scheduleList.stream().map(Schedule::getGlassId).distinct().collect(Collectors.toList());
-        Map<Long, List<Schedule>> plan = init(glassList, 5, 7);
+        List<Plan> scheduleList =toPlan( scheduleService.getList());
+        List<Long> glassList = scheduleList.stream().map(Plan::getGlassId).distinct().collect(Collectors.toList());
+        Map<Long, List<Plan>> plan = init(glassList, 5, 7);
         do {
             boolean any = forSchedule(plan, scheduleList);
             if (!any) {
-                Schedule schedule = scheduleList.get(0);
+                Plan schedule = scheduleList.get(0);
                 System.out.print(schedule.getId() + "(" + schedule.getTeacherId() + "," + schedule.getSubjectId() + "),");
                 scheduleList.remove(0);
             }
-            scheduleList = scheduleList.stream().filter(schedule -> schedule.getCount() > 0).sorted(Comparator.comparing(Schedule::getCount).reversed()).collect(Collectors.toList());
+            scheduleList = scheduleList.stream().filter(schedule -> schedule.getCount() > 0).sorted(Comparator.comparing(Plan::getSort).reversed()).collect(Collectors.toList());
         } while (scheduleList.size() > 0);
         showResult(plan);
         return plan;
     }
 
-    private boolean forSchedule(Map<Long, List<Schedule>> plan, List<Schedule> scheduleList) {
+    private boolean forSchedule(Map<Long, List<Plan>> plan, List<Plan> scheduleList) {
         boolean any = false;
-        for (Schedule schedule : scheduleList) {
+        for (Plan schedule : scheduleList) {
             if (scheduleOneSubject(plan, schedule)) {
                 any = true;
                 break;
@@ -49,7 +54,7 @@ public class PlanService {
         return any;
     }
 
-    private boolean scheduleOneSubject(Map<Long, List<Schedule>> plan, Schedule schedule) {
+    private boolean scheduleOneSubject(Map<Long, List<Plan>> plan, Plan schedule) {
         if (schedule.getCount() <= 0) {
             return false;
         }
@@ -65,11 +70,11 @@ public class PlanService {
         return OptimizationSchedule(plan, schedule, 0);
     }
 
-    private boolean OptimizationSchedule(Map<Long, List<Schedule>> plan, Schedule schedule, int beginIndex) {
+    private boolean OptimizationSchedule(Map<Long, List<Plan>> plan, Plan schedule, int beginIndex) {
         int index = beginIndex;
-        List<Schedule> glassPlan = plan.get(schedule.getGlassId());
-        List<Schedule> schedules = glassPlan.subList(beginIndex, glassPlan.size());
-        for (Schedule schedule1 : schedules) {
+        List<Plan> glassPlan = plan.get(schedule.getGlassId());
+        List<Plan> schedules = glassPlan.subList(beginIndex, glassPlan.size());
+        for (Plan schedule1 : schedules) {
             if (schedule1.getId() > 0) {
                 index++;
                 continue;
@@ -85,12 +90,12 @@ public class PlanService {
         return false;
     }
 
-    private boolean filterOtherGlass(Map<Long, List<Schedule>> plan, Schedule schedule, int i) {
-        for (Map.Entry<Long, List<Schedule>> longListEntry : plan.entrySet()) {
+    private boolean filterOtherGlass(Map<Long, List<Plan>> plan, Plan schedule, int i) {
+        for (Map.Entry<Long, List<Plan>> longListEntry : plan.entrySet()) {
             if (longListEntry.getKey() == schedule.getGlassId()) {
                 continue;
             }
-            Schedule otherSchedule = longListEntry.getValue().get(i);
+            Plan otherSchedule = longListEntry.getValue().get(i);
             if (otherSchedule.getId() != 0 && otherSchedule.getTeacherId() == schedule.getTeacherId()) {
                 return true;
             } else {
@@ -100,12 +105,12 @@ public class PlanService {
         return false;
     }
 
-    private Map<Long, List<Schedule>> init(List<Long> glassList, int day, int number) {
-        Map<Long, List<Schedule>> planMap = new HashMap<>();
+    private Map<Long, List<Plan>> init(List<Long> glassList, int day, int number) {
+        Map<Long, List<Plan>> planMap = new HashMap<>();
         for (Long glassId : glassList) {
-            List<Schedule> planList = new ArrayList<>();
+            List<Plan> planList = new ArrayList<>();
             for (int j = 0; j < day * number; j++) {
-                Schedule schedule = new Schedule();
+                Plan schedule = new Plan();
                 schedule.setId(0L);
                 planList.add(schedule);
             }
@@ -114,19 +119,43 @@ public class PlanService {
         return planMap;
     }
 
-    private void showResult(Map<Long, List<Schedule>> plan) {
-        for (Map.Entry<Long, List<Schedule>> longListEntry : plan.entrySet()) {
+    private void showResult(Map<Long, List<Plan>> plan) {
+        for (Map.Entry<Long, List<Plan>> longListEntry : plan.entrySet()) {
             System.out.println(longListEntry.getKey());
             int index = 0;
-            for (Schedule schedule : longListEntry.getValue()) {
+            for (Plan schedule : longListEntry.getValue()) {
                 if (index % 7 == 0) {
                     System.out.println();
                 }
                 index += 1;
-                System.out.print(schedule.getId() + "(" + schedule.getTeacherId() + "," + schedule.getSubjectId() + "),");
+                System.out.print(schedule.getId() + "(" + schedule.getTeacherId() + "," + schedule.getSubjectName() + "),");
             }
             System.out.println();
         }
         System.out.println();
+    }
+
+    private List<Plan> toPlan(List<Schedule> scheduleList){
+        List<Subject> list = subjectService.getList();
+        Map<Long, Subject> subjectMap = list.stream().collect(Collectors.toMap(subject -> subject.getId(), subject -> subject));
+
+        List<Plan> planlist=Lists.newArrayList();
+        for (Schedule schedule :scheduleList) {
+        	planlist.add(toPlan(schedule,subjectMap.get(schedule.getSubjectId())));
+        }
+        return planlist;
+
+    }
+    private Plan toPlan(Schedule schedule, Subject subject){
+        Plan plan = new Plan();
+        plan.setId(schedule.getId());
+        plan.setTeacherId(schedule.getTeacherId());
+        plan.setGlassId(schedule.getGlassId());
+        plan.setSubjectId(schedule.getSubjectId());
+        plan.setCount(schedule.getCount());
+        plan.setSort(subject.getSort());
+        plan.setSubjectName(subject.getSubjectName());
+        return plan;
+
     }
 }

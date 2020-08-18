@@ -26,6 +26,9 @@ public class Subject {
 
     @Column(name = "SubjectName")
     private String subjectName;
+
+    @Column(name = "Sort")
+    private int sort;
     /**
      * 创建时间
      */
