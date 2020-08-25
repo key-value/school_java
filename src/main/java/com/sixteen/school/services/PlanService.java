@@ -38,7 +38,9 @@ public class PlanService {
                 System.out.print(schedule.getId() + "(" + schedule.getTeacherId() + "," + schedule.getSubjectId() + "),");
                 scheduleList.remove(0);
             }
-            scheduleList = scheduleList.stream().filter(schedule -> schedule.getCount() > 0).sorted(Comparator.comparing(Plan::getSort).thenComparing(Plan::getCount).reversed()).collect(Collectors.toList());
+            scheduleList = scheduleList.stream().filter(schedule -> schedule.getCount() > 0).sorted(Comparator.comparing(Plan::getCount, (o1, o2) -> {
+                return o1 > this.dayNum ? 1 : o2 > this.dayNum ? -1 : 0;
+            }).thenComparing(Plan::getSort).thenComparing(Plan::getCount).reversed()).collect(Collectors.toList());
         } while (scheduleList.size() > 0);
         showResult(plan);
         return plan;
@@ -63,34 +65,39 @@ public class PlanService {
         if (scheduleIndex >= 0) {
             int nextday = (scheduleIndex + daySize) / daySize;
             if (nextday <= dayNum) {
-                if (OptimizationSchedule(plan, schedule, nextday * daySize)) {
+                if (OptimizationSchedule(plan, schedule, nextday * daySize, schedule.getCount() / dayNum + 1)) {
                     return true;
                 }
             }
         }
         var bestDay = getBestDay(schedule.getGlassId());
-        return OptimizationSchedule(plan, schedule, bestDay * daySize);
+        return OptimizationSchedule(plan, schedule, bestDay * daySize, schedule.getCount() / dayNum + 1);
     }
 
-    private boolean OptimizationSchedule(Map<Long, List<Plan>> plan, Plan schedule, int beginIndex) {
+    private boolean OptimizationSchedule(Map<Long, List<Plan>> planMap, Plan schedule, int beginIndex, int planNum) {
         int index = beginIndex;
-        List<Plan> glassPlan = plan.get(schedule.getGlassId());
+        List<Plan> glassPlan = planMap.get(schedule.getGlassId());
         List<Plan> schedules = glassPlan.subList(beginIndex, glassPlan.size());
+        List<Plan> scheduleList = new ArrayList<>();
+        int scheduleIndex = index;
         for (Plan schedule1 : schedules) {
-            if (schedule1.getId() > 0) {
+            if (schedule1.getId() > 0 || filterOtherGlass(planMap, schedule, index)) {
                 index++;
+                scheduleIndex = index;
+                scheduleList.clear();
                 continue;
             }
-            if (filterOtherGlass(plan, schedule, index)) {
-                index++;
-                continue;
+            scheduleList.add(schedule1);
+            if (scheduleList.size() == planNum) {
+                break;
             }
-            glassPlan.set(index, schedule);
-            schedule.setCount(schedule.getCount() - 1);
-            addDayNum(schedule.getGlassId(), index, schedule.getSubjectId());
-            return true;
         }
-        return false;
+        for (Plan plan : scheduleList) {
+            glassPlan.set(scheduleIndex, schedule);
+            schedule.setCount(schedule.getCount() - 1);
+            addDayNum(schedule.getGlassId(), scheduleIndex++, schedule.getSubjectId());
+        }
+        return scheduleList.size() == planNum;
     }
 
     private boolean filterOtherGlass(Map<Long, List<Plan>> plan, Plan schedule, int i) {
@@ -123,7 +130,7 @@ public class PlanService {
     }
 
     private void addDayNum(long glassId, int index, long subjectId) {
-        int dayNumber = index / daySize ;
+        int dayNumber = index / daySize;
         int dayIndex = index % daySize;
         long[][] tableNum = this.tableMap.get(glassId);
         tableNum[dayNumber][dayIndex] = subjectId;
