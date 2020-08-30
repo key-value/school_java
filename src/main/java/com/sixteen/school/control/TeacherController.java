@@ -1,6 +1,7 @@
 package com.sixteen.school.control;
 
 import com.sixteen.school.model.Teacher;
+import com.sixteen.school.result.QueryResult;
 import com.sixteen.school.services.TeacherService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -31,14 +32,14 @@ public class TeacherController {
     }
 
     @PutMapping(path = "/{id}")
-    Teacher updateTeacher(@PathVariable(value = "id") Teacher teacher,String name) {
+    Teacher updateTeacher(@PathVariable(value = "id") Teacher teacher, String name) {
         teacher.setTeacherName(name);
         return teacherService.updateTeacher(teacher);
     }
 
     @DeleteMapping(path = "/{id}")
-    void removeTeacher(@PathVariable(value = "id")  long id) {
-         teacherService.removeTeacher(id);
+    void removeTeacher(@PathVariable(value = "id") long id) {
+        teacherService.removeTeacher(id);
     }
 
     @GetMapping(path = "/{id}")
@@ -47,7 +48,7 @@ public class TeacherController {
     }
 
     @GetMapping(path = "/Id")
-    List<Teacher> getListById(@RequestParam(value = "ids") List<Teacher> teacher ) {
+    List<Teacher> getListById(@RequestParam(value = "ids") List<Teacher> teacher) {
         return new ArrayList<>();
     }
 
@@ -62,9 +63,9 @@ public class TeacherController {
             @ApiImplicitParam(name = "page", paramType = "query", value = "1"),
             @ApiImplicitParam(name = "size", paramType = "query", value = "10")
     })
-    Page<Teacher> getPageList(@ApiIgnore @PageableDefault(value = 15, sort = {"id"}, direction = Sort.Direction.DESC)
-                                          Pageable pageable) {
-        Page<Teacher> teacherPage = teacherService.getPageList( pageable);
-        return teacherPage;
+    QueryResult<Teacher> getPageList(@ApiIgnore @PageableDefault(value = 15, sort = {"id"}, direction = Sort.Direction.DESC)
+                                             Pageable pageable) {
+        Page<Teacher> teacherPage = teacherService.getPageList(pageable);
+        return new QueryResult<>(teacherPage);
     }
 }
