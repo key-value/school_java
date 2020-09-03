@@ -3,6 +3,7 @@ package com.sixteen.school.control;
 import com.sixteen.school.model.Teacher;
 import com.sixteen.school.result.QueryResult;
 import com.sixteen.school.services.TeacherService;
+import com.sixteen.school.star.controlSign;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "v1/teacher", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@controlSign
 public class TeacherController {
 
     @Autowired
@@ -68,4 +70,14 @@ public class TeacherController {
         Page<Teacher> teacherPage = teacherService.getPageList(pageable);
         return new QueryResult<>(teacherPage);
     }
+
+    @GetMapping(path = "/err")
+    Integer getTeacherById(@RequestParam Integer i) throws Exception {
+        if (i == null || i == 0) {
+            throw new Exception("111");
+        }
+        return 1;
+    }
+
+
 }
