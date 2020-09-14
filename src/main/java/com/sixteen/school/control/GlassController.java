@@ -1,6 +1,7 @@
 package com.sixteen.school.control;
 
 import com.sixteen.school.model.Glass;
+import com.sixteen.school.result.QueryResult;
 import com.sixteen.school.services.GlassService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -22,16 +23,16 @@ public class GlassController {
     public GlassService glassService;
 
     @PostMapping()
-    Glass add(Glass glass) {
+    Glass add(@RequestBody Glass glass) {
         return glassService.addGlass(glass);
     }
 
-    @PutMapping()
-    Glass update(Glass glass) {
+    @PutMapping(path = "/{id}")
+    Glass update(@RequestBody Glass glass) {
         return glassService.updateGlass(glass);
     }
 
-    @DeleteMapping()
+    @DeleteMapping(path = "/{id}")
     void remove(long id) {
         glassService.removeGlass(id);
     }
@@ -52,9 +53,9 @@ public class GlassController {
             @ApiImplicitParam(name = "page", paramType = "query", value = "1"),
             @ApiImplicitParam(name = "size", paramType = "query", value = "10")
     })
-    Page<Glass>  getPageList(@ApiIgnore @PageableDefault(value = 15, sort = {"id"}, direction = Sort.Direction.DESC)
+    QueryResult<Glass> getPageList(@ApiIgnore @PageableDefault(value = 15, sort = {"id"}, direction = Sort.Direction.DESC)
                                           Pageable pageable) {
         Page<Glass> glasses = glassService.getPageList(    pageable);
-        return glasses;
+        return new QueryResult<>(glasses);
     }
 }

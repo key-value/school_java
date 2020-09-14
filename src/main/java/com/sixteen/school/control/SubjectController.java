@@ -1,6 +1,7 @@
 package com.sixteen.school.control;
 
 import com.sixteen.school.model.Subject;
+import com.sixteen.school.result.QueryResult;
 import com.sixteen.school.services.SubjectService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -21,26 +22,26 @@ public class SubjectController {
     public SubjectService subjectService;
 
     @PostMapping()
-    Subject addSubject(String name) {
+    Subject addSubject( @RequestBody Subject otherSubject) {
         Subject subject = new Subject();
-        subject.setSubjectName(name);
+        subject.setSubjectName(otherSubject.getSubjectName());
         return subjectService.addSubject(subject);
     }
 
-    @PutMapping()
-    Subject updateSubject(Subject subject) {
+    @PutMapping(path = "/{id}")
+    Subject updateSubject(@PathVariable(value = "id")Subject oldSubject,@RequestBody Subject subject) {
+        oldSubject.setSubjectName(subject.getSubjectName());
         return subjectService.updateSubject(subject);
     }
 
-    @DeleteMapping()
+    @DeleteMapping(path = "/{id}")
     void removeSubject(long id) {
          subjectService.removeSubject(id);
     }
 
     @GetMapping(path = "/{id}")
-    Subject getSubjectById(@PathVariable(value = "id") Long id) {
-        Subject subject = subjectService.getSubjectById(id);
-        return subject;
+    Subject getSubjectById(@PathVariable(value = "id") Subject oldSubject) {
+        return oldSubject;
     }
 
     @GetMapping()
@@ -53,9 +54,9 @@ public class SubjectController {
             @ApiImplicitParam(name = "page", paramType = "query", value = "1"),
             @ApiImplicitParam(name = "size", paramType = "query", value = "10")
     })
-    Page<Subject> getPageList(@ApiIgnore @PageableDefault(value = 15, sort = {"id"}, direction = Sort.Direction.DESC)
+    QueryResult<Subject> getPageList(@ApiIgnore @PageableDefault(value = 15, sort = {"id"}, direction = Sort.Direction.DESC)
                                           Pageable pageable) {
         Page<Subject> subjectPage = subjectService.getPageList(pageable);
-        return subjectPage;
+        return new QueryResult<>(subjectPage);
     }
 }

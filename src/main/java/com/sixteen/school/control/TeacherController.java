@@ -27,15 +27,15 @@ public class TeacherController {
     public TeacherService teacherService;
 
     @PostMapping()
-    Teacher addTeacher(String name) {
+    Teacher addTeacher(@RequestBody Teacher addTeacher) {
         Teacher teacher = new Teacher();
-        teacher.setTeacherName(name);
+        teacher.setTeacherName(addTeacher.getTeacherName());
         return teacherService.addTeacher(teacher);
     }
 
     @PutMapping(path = "/{id}")
-    Teacher updateTeacher(@PathVariable(value = "id") Teacher teacher, String name) {
-        teacher.setTeacherName(name);
+    Teacher updateTeacher(@PathVariable(value = "id") Teacher teacher,@RequestBody Teacher addTeacher) {
+        teacher.setTeacherName(addTeacher.getTeacherName());
         return teacherService.updateTeacher(teacher);
     }
 
@@ -72,7 +72,7 @@ public class TeacherController {
     }
 
     @GetMapping(path = "/err")
-    Integer getTeacherById(@RequestParam Integer i) throws Exception {
+    Integer tryErr(@RequestParam Integer i) throws Exception {
         if (i == null || i == 0) {
             throw new Exception("111");
         }

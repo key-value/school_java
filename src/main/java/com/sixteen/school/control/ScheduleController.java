@@ -1,6 +1,7 @@
 package com.sixteen.school.control;
 
 import com.sixteen.school.model.Schedule;
+import com.sixteen.school.result.QueryResult;
 import com.sixteen.school.services.ScheduleService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -22,16 +23,19 @@ public class ScheduleController {
     public ScheduleService scheduleService;
 
     @PostMapping()
-    Schedule add(Schedule schedule) {
+    Schedule add(@RequestBody Schedule schedule) {
         return scheduleService.addSchedule(schedule);
     }
 
-    @PutMapping()
-    Schedule update(Schedule schedule) {
-        return scheduleService.updateSchedule(schedule);
+    @PutMapping(path = "/{id}")
+    Schedule update(@RequestBody Schedule schedule,@PathVariable(value = "id") Schedule oldSchedule) {
+        oldSchedule.setGlassId(schedule.getGlassId());
+        oldSchedule.setCount(schedule.getCount());
+        oldSchedule.setSubjectId(schedule.getSubjectId());
+        return scheduleService.updateSchedule(oldSchedule);
     }
 
-    @DeleteMapping()
+    @DeleteMapping(path = "/{id}")
     void remove(long id) {
          scheduleService.removeSchedule(id);
     }
@@ -52,10 +56,10 @@ public class ScheduleController {
             @ApiImplicitParam(name = "page", paramType = "query", value = "1"),
             @ApiImplicitParam(name = "size", paramType = "query", value = "10")
     })
-    Page<Schedule> getPageList(@ApiIgnore @PageableDefault(value = 15, sort = {"id"}, direction = Sort.Direction.DESC)
+    QueryResult<Schedule> getPageList(@ApiIgnore @PageableDefault(value = 15, sort = {"id"}, direction = Sort.Direction.DESC)
                                            Pageable pageable) {
         Page<Schedule> subjectPage = scheduleService.getPageList(pageable);
-        return subjectPage;
+        return new QueryResult<>(subjectPage);
     }
 
 
