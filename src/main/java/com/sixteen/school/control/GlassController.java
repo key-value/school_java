@@ -19,6 +19,7 @@ import java.util.List;
 @RequestMapping(value = "v1/glass")
 public class GlassController {
 
+
     @Autowired
     public GlassService glassService;
 
@@ -55,7 +56,7 @@ public class GlassController {
     })
     QueryResult<Glass> getPageList(@ApiIgnore @PageableDefault(value = 15, sort = {"id"}, direction = Sort.Direction.DESC)
                                           Pageable pageable) {
-        Page<Glass> glasses = glassService.getPageList(    pageable);
+        Page<Glass> glasses = glassService.getPageList(pageable);
         return new QueryResult<>(glasses);
     }
 }
