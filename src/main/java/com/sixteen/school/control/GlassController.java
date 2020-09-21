@@ -25,22 +25,22 @@ public class GlassController {
 
     @PostMapping()
     Glass add(@RequestBody Glass glass) {
-        return glassService.addGlass(glass);
+        return glassService.add(glass);
     }
 
     @PutMapping(path = "/{id}")
     Glass update(@RequestBody Glass glass) {
-        return glassService.updateGlass(glass);
+        return glassService.update(glass);
     }
 
     @DeleteMapping(path = "/{id}")
     void remove(long id) {
-        glassService.removeGlass(id);
+        glassService.remove(id);
     }
 
     @GetMapping(path = "/{id}")
     Glass getById(@PathVariable(value = "id") Long id) {
-        Glass glass = glassService.getGlassById(id);
+        Glass glass = glassService.getById(id);
         return glass;
     }
 

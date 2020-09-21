@@ -15,4 +15,5 @@ public class MvcConfiguration {
     public ExceptionResultResolver resultResolver() {
         return new DefaultExceptionResultResolver();
     }
+
 }

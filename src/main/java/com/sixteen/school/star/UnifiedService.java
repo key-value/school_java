@@ -15,11 +15,11 @@ public class UnifiedService<M> {
         jpaRepository = repository;
     }
 
-    public M addT(M grade) {
+    public M add(M grade) {
         return jpaRepository.save(grade);
     }
 
-    public M updateT(M grade) {
+    public M update(M grade) {
         return jpaRepository.save(grade);
     }
 
