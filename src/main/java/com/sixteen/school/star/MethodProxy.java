@@ -1,12 +1,12 @@
 package com.sixteen.school.star;
 
-import org.springframework.aop.framework.AopProxy;
-import org.springframework.util.ClassUtils;
+import org.springframework.beans.factory.FactoryBean;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
-public class MethodProxy implements AopProxy, InvocationHandler {
+public class MethodProxy implements FactoryBean<ITestService>, InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args)  throws Throwable {
         //如果传进来是一个已实现的具体类（本次演示略过此逻辑)
@@ -40,12 +40,13 @@ public class MethodProxy implements AopProxy, InvocationHandler {
     }
 
     @Override
-    public Object getProxy() {
-        return getProxy(ClassUtils.getDefaultClassLoader());
+    public ITestService getObject() throws Exception {
+        ITestService prox = (ITestService) Proxy.newProxyInstance(this.getClass().getClassLoader(),new Class[]{ITestService.class}, this);
+                return prox;
     }
 
     @Override
-    public Object getProxy(ClassLoader classLoader) {
-        return null;
+    public Class<?> getObjectType() {
+        return ITestService.class;
     }
 }

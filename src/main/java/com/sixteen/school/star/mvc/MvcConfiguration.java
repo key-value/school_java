@@ -2,6 +2,7 @@ package com.sixteen.school.star.mvc;
 
 import com.sixteen.school.star.DefaultExceptionResultResolver;
 import com.sixteen.school.star.ExceptionResultResolver;
+import com.sixteen.school.star.SpecialBeanForUnified;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -16,4 +17,9 @@ public class MvcConfiguration {
         return new DefaultExceptionResultResolver();
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    SpecialBeanForUnified specialBeanForUnified() {
+        return new SpecialBeanForUnified();
+    }
 }

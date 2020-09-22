@@ -11,18 +11,22 @@ import org.springframework.stereotype.Service;
 public class GlassService {
 
     @Delegate
-    UnifiedService<Glass> unifiedService ;
-
+    UnifiedService<Glass> unifiedService;
 
     ITestService testService;
 
     private final GlassRepository glassRepository;
 
-    public GlassService(GlassRepository glassRepository) {
+    public GlassService(GlassRepository glassRepository,ITestService testService) {
         this.unifiedService = new UnifiedService<>(glassRepository);
         this.glassRepository = glassRepository;
+        this.testService = testService;
     }
 
+
+    public void test(){
+        testService.getName();
+    }
 //    public Glass addGlass(Glass glass) {
 //        return glassRepository.save(glass);
 //    }

@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefiniti
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
 
-@Configuration
 public class GeneratorBeanConfig implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;

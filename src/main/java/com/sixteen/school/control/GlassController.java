@@ -45,7 +45,9 @@ public class GlassController {
     }
 
     @GetMapping()
-    List<Glass> getList() {
+    List<Glass> getList()
+    {
+        glassService.test();
         return glassService.getList();
     }
 
