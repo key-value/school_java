@@ -1,8 +1,11 @@
 package com.sixteen.school;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication()
@@ -13,6 +16,10 @@ public class SchoolApplication {
     public static void main(String[] args) {
         SpringApplication.run(SchoolApplication.class, args);
 
+         Log logger = LogFactory.getLog("11");
+        String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX;
+        logger.info(packageSearchPath);
+    }
 
 //        PlanService a = CglibProxy.getInstance().getInstance().getProxy(PlanService.class);
 //        MethodProxy m=new MethodProxy();
@@ -24,16 +31,6 @@ public class SchoolApplication {
 //         s= ud.say();
 //        System.out.println(s);
 
-    }
 
-//    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception{
-//        SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-//        sqlSessionFactoryBean.setDataSource(dataSource);
-//
-//        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-//        sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/mybatis/*.xml"));
-//
-//        return sqlSessionFactoryBean.getObject();
-//    }
 
 }

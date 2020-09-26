@@ -2,9 +2,9 @@ package com.sixteen.school.services;
 
 import com.sixteen.school.model.Glass;
 import com.sixteen.school.repository.GlassRepository;
-import com.sixteen.school.star.ITestService;
 import com.sixteen.school.star.UnifiedService;
 import lombok.experimental.Delegate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,14 +13,14 @@ public class GlassService {
     @Delegate
     UnifiedService<Glass> unifiedService;
 
-    ITestService testService;
+    @Autowired
+    GlassScheduleService testService;
 
     private final GlassRepository glassRepository;
 
-    public GlassService(GlassRepository glassRepository,ITestService testService) {
+    public GlassService(GlassRepository glassRepository) {
         this.unifiedService = new UnifiedService<>(glassRepository);
         this.glassRepository = glassRepository;
-        this.testService = testService;
     }
 
 
@@ -29,6 +29,7 @@ public class GlassService {
     }
 //    public Glass addGlass(Glass glass) {
 //        return glassRepository.save(glass);
+
 //    }
 //
 //    public Glass updateGlass(Glass glass) {

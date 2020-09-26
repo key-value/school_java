@@ -7,8 +7,6 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import java.util.Map;
-
 public class GeneratorBeanConfig implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
@@ -22,18 +20,18 @@ public class GeneratorBeanConfig implements ApplicationContextAware {
     }
 
     private void registBeanByFactory(DefaultListableBeanFactory beanFactory) {
-        System.out.println("IdGeneratorBeanConfig.registBeanByFactory()");
-        Map<String, Object> beansWithAnnotationMap = this.applicationContext.getBeansWithAnnotation(MultiService.class);
-
-        Class<? extends Object> clazz = null;
-        for (Map.Entry<String, Object> entry : beansWithAnnotationMap.entrySet()) {
-            clazz = entry.getValue().getClass();//获取到实例对象的class信息
-            Class<? extends Object>[] interfaces = clazz.getInterfaces();
-            for (Class<? extends Object> aInterface : interfaces) {
-                //接口信息
-                Object aIn = aInterface;
-            }
-        }
+//        System.out.println("IdGeneratorBeanConfig.registBeanByFactory()");
+//        Map<String, Object> beansWithAnnotationMap = this.applicationContext.getBeansWithAnnotation(MultiService.class);
+//
+//        Class<? extends Object> clazz = null;
+//        for (Map.Entry<String, Object> entry : beansWithAnnotationMap.entrySet()) {
+//            clazz = entry.getValue().getClass();//获取到实例对象的class信息
+//            Class<? extends Object>[] interfaces = clazz.getInterfaces();
+//            for (Class<? extends Object> aInterface : interfaces) {
+//                //接口信息
+//                Object aIn = aInterface;
+//            }
+//        }
     }
 
     /**
