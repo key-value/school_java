@@ -1,11 +1,8 @@
 package com.sixteen.school;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication()
@@ -15,10 +12,7 @@ public class SchoolApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SchoolApplication.class, args);
-
-         Log logger = LogFactory.getLog("11");
-        String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX;
-        logger.info(packageSearchPath);
+        
     }
 
 //        PlanService a = CglibProxy.getInstance().getInstance().getProxy(PlanService.class);

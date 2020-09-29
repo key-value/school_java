@@ -33,7 +33,9 @@ public class MvcConfiguration {
     @ConditionalOnMissingBean
     public DefaultClassRegistryBeanFactory configDefaultClassRegistryBeanFactory() {
         DefaultClassRegistryBeanFactory defaultClassRegistryBeanFactory = new DefaultClassRegistryBeanFactory();
-        defaultClassRegistryBeanFactory.setScanPackage("com.sixteen.school");
+//        defaultClassRegistryBeanFactory.setScanPackage("com.sixteen.school");
+        defaultClassRegistryBeanFactory.setScanPackage("*");
+
         defaultClassRegistryBeanFactory.setMapperManagerFactoryBean("MultiServiceFactoryBean");
         return defaultClassRegistryBeanFactory;
 
