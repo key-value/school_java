@@ -12,7 +12,7 @@ public class SchoolApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SchoolApplication.class, args);
-        
+
     }
 
 //        PlanService a = CglibProxy.getInstance().getInstance().getProxy(PlanService.class);

@@ -29,8 +29,10 @@ public class GradeController {
     }
 
     @PutMapping(path = "/{id}")
-    Grade update(@RequestBody Grade grade) {
-        return gradeService.updateGrade(grade);
+    Grade update(@PathVariable(value = "id")  Grade oldGrade,@RequestBody  Grade grade ) {
+        oldGrade.setGradeNum(grade.getGradeNum());
+        oldGrade.setSign(grade.getSign());
+        return gradeService.updateGrade(oldGrade);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -39,8 +41,7 @@ public class GradeController {
     }
 
     @GetMapping(path = "/{id}")
-    Grade getById(@PathVariable(value = "id") Long id) {
-        Grade grade = gradeService.getGradeById(id);
+    Grade getById(@PathVariable(value = "id") Grade grade) {
         return grade;
     }
 
