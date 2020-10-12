@@ -31,8 +31,10 @@ public class GlassController {
     }
 
     @PutMapping(path = "/{id}")
-    Glass update(@RequestBody Glass glass) {
-        return glassService.update(glass);
+    Glass update(@PathVariable("id") Glass oldGlass,@RequestBody Glass glass ) {
+        oldGlass.setGlassName(glass.getGlassName());
+        oldGlass.setGradeId(glass.getGradeId());
+        return glassService.update(oldGlass);
     }
 
     @DeleteMapping(path = "/{id}")
